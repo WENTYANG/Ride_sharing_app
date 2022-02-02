@@ -1,0 +1,23 @@
+1.Forgot to write order.save(), after modifying driver information, the updates haven't been posted
+2.While using form, should write form.cleaned_data[attribute] instead of using form.attribute
+3.Sharer information is not shown in the admin page, solved after adding __str__ method in sharer class
+
+problem --> solution
+    0.When the ride owner has made some change to the order, causing some sharers incompatible with the current ride, we want to remove these sharers from the ride, and inform them of the cancellation. To implement
+       this functionality, we change the original manytomany field "sharer" to contain a through field, and we keep track of the time window of each sharer in the through table "Membership". Every time the owner modifies
+       the ride, we check if it fails any sharer's requirements.
+       
+       After modifying the manytomany field, some webpages showing the warning: column sharer_id not exist. Solved by creating a new database.
+
+    1.The orders as driver is not shown in my driven rides --> Forgot to add order.save(), did not save the driver after accepting order.
+    2.Vehicle_type and licence are not shown in ride detail  --> Wrote driver.vehicle_type in the template instead of driverinfo.vehicle_type, the field is under driverinfo module, not user.
+    3.A user can be the driver of his/her own ride，in the pickup page, he/she can get search results of the rides he/she owns --> Add conditional check if(ride.owner!=user) in views.
+    8.Once the order is completed, we should restrict the user from editing it or completing it again --> UpdateView -> test_func -> if (ride.complete==False)
+    9.When the user hasn't specified a vehicle type, all types of vehicles should match --> Q(vehicle_type=request.user.driverinfo.vehicle_type)|Q(vehicle_type='')
+    7.The "Now xx people" in the webpage are sometimes not updated --> Should use num_all indicating the passenger numbers including owner and sharer party.
+    8.Delete order: check ride is open, not confirmed by a driver --> ride.is_open==True
+    9.Repeatedly sharing a same ride --> in views: if Membership.objects.filter(ride=ride, user=sharer).exists()
+    10.A user can share ride a ride owned by herself  --> in template: if object.owner != user
+    16.Sharer should be able to quit a ride --> Add quit_sharing in views
+    
+
